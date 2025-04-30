@@ -1,2 +1,3 @@
-Notion widgets
-wheel_of_life.html
+Notion widgets/n
+
+[Wheel of Life](./wheel_of_life.html)
