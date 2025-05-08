@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-container {
+            width: 120px; /* Increased size for better visibility */
+            height: 180px; /* Increased size for better visibility */
+            border: 2px solid #4a5568; /* gray-700 */
+            border-radius: 12px; /* rounded-lg */
+            margin: 24px auto; /* Increased margin for spacing */
+            position: relative;
+            overflow: hidden;
+            background-color: #edf2f7; /* gray-200 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* shadow-md */
+            cursor: pointer; /* Add cursor pointer for better UX */
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .glass-container:hover {
+             transform: scale(1.05); /* Slightly larger on hover */
+        }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #3b82f6; /* blue-500 */
+            height: 0;
+            transition: height 0.3s ease-in-out;
+            border-radius: 8px 8px 0 0; /* rounded-md only on top */
+        }
+
+        .water-level-text {
+            position: absolute;
+            bottom: 10px; /* Increased for better visibility */
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff; /* White text color */
+            font-size: 16px; /* text-md */
+            font-weight: 600; /* font-semibold */
+            transition: color 0.3s ease; /* Smooth transition for color changes */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
+        }
+
+        .info-container {
+            text-align: center;
+            margin-bottom: 24px; /* Increased margin for spacing */
+        }
+
+        .progress-text {
+            font-size: 18px; /* text-lg */
+            color: #4a5568; /* gray-700 */
+            font-weight: 600; /* font-semibold */
+        }
+
+        .cup-count-text {
+            font-size: 16px; /* text-md */
+            color: #718096; /* gray-600 */
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Vertically center items */
+            margin-top: 16px; /* Add space above the input */
+        }
+
+        #target-input {
+            width: 80px; /* Reduced width */
+            padding: 8px; /* padding-2 */
+            border: 1px solid #cbd5e0; /* gray-400 */
+            border-radius: 6px; /* rounded-md */
+            margin-left: 8px; /* space-x-2 */
+            font-size: 16px; /* text-md */
+            transition: border-color 0.2s ease-in-out; /* Smooth transition */
+            box-sizing: border-box; /* Ensure padding doesn't increase size */
+        }
+
+        #target-input:focus {
+            outline: none; /* Remove default outline */
+            border-color: #3b82f6; /* blue-500 on focus */
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); /* blue-200 focus shadow */
+        }
+
+        .set-target-button {
+            padding: 8px 16px; /* padding-2 padding-4 */
+            background-color: #3b82f6; /* blue-500 */
+            color: #ffffff; /* text-white */
+            border-radius: 6px; /* rounded-md */
+            font-size: 16px; /* text-md */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border: none;
+        }
+
+        .set-target-button:hover {
+            background-color: #2563eb; /* blue-700 on hover */
+            transform: translateY(-1px); /* Slightly move up on hover */
+        }
+
+        .set-target-button:active {
+            background-color: #1e40af; /* blue-800 on active */
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Smaller shadow on active */
+        }
+
+        .message-container {
+            position: fixed; /* Use fixed positioning */
+            top: 20px; /* Position from the top */
+            left: 50%; /* Center horizontally initially */
+            transform: translateX(-50%); /* Precise centering */
+            background-color: #f0fdf4; /* green-100 for success, red-100 for error */
+            color: #15803d; /* green-800 for success,  #b91c1c for error*/
+            padding: 16px 24px; /* padding-4  padding-6 */
+            border-radius: 6px; /* rounded-md */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* shadow-md */
+            z-index: 10; /* Ensure it's above other elements */
+            opacity: 0; /* Start with 0 opacity */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition */
+            white-space: nowrap; /* Prevent wrapping */
+        }
+
+        .message-container.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0); /* Fade in and move up */
+        }
+
+         .message-container.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #b91c1c; /* red-700 */
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center">
+    <div class="info-container">
+        <p class="progress-text">Daily Water Intake</p>
+        <p class="cup-count-text"><span id="current-cups">0</span> / <span id="target-cups">8</span> Cups</p>
+    </div>
+
+    <div class="glass-container">
+        <div class="water">
+            <div class="water-level-text">0%</div>
+        </div>
+    </div>
+
+    <div class="input-container">
+        <label for="target-input" class="block text-sm font-medium text-gray-700">Target (Cups):</label>
+        <input type="number" id="target-input" value="8" min="1" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+        <button id="set-target-button" class="set-target-button">Set Target</button>
+    </div>
+     <div id="message-container" class="message-container"></div>
+
+    <script>
+        const glassContainer = document.querySelector('.glass-container');
+        const waterDiv = document.querySelector('.water');
+        const currentCupsDisplay = document.getElementById('current-cups');
+        const targetCupsDisplay = document.getElementById('target-cups');
+        const targetInput = document.getElementById('target-input');
+        const setTargetButton = document.getElementById('set-target-button');
+        const waterLevelText = document.querySelector('.water-level-text');
+        const messageContainer = document.getElementById('message-container');
+
+        let currentCups = 0;
+        let targetCups = 8;
+        const cupSize = 250; // in ml, for demonstration purposes.  Not used in the visual.
+
+        targetCupsDisplay.textContent = targetCups;
+
+        function updateWaterLevel() {
+            const percentage = (currentCups / targetCups) * 100;
+            waterDiv.style.height = `${percentage}%`;
+            waterLevelText.textContent = `${Math.round(percentage)}%`;
+
+             // Change color based on hydration level
+            if (percentage < 20) {
+                waterDiv.style.backgroundColor = '#f87171'; // red-500
+                waterLevelText.style.color = '#f87171';
+            } else if (percentage < 50) {
+                waterDiv.style.backgroundColor = '#fcd34d'; // yellow-400
+                waterLevelText.style.color = '#fcd34d';
+            } else if (percentage < 80) {
+                waterDiv.style.backgroundColor = '#6ee7b7'; // green-300
+                waterLevelText.style.color = '#16a34a';
+            } else {
+                waterDiv.style.backgroundColor = '#3b82f6'; // blue-500
+                waterLevelText.style.color = '#ffffff';
+            }
+        }
+
+        function showMessage(message, type = 'success') {
+            messageContainer.textContent = message;
+            messageContainer.className = `message-container ${type}`; // Use classList for dynamic classes
+            messageContainer.classList.add('show');
+
+            setTimeout(() => {
+                messageContainer.classList.remove('show');
+            }, 3000); // 3 seconds
+        }
+
+        glassContainer.addEventListener('click', () => {
+            if (currentCups < targetCups) {
+                currentCups++;
+                currentCupsDisplay.textContent = currentCups;
+                updateWaterLevel();
+                 showMessage(`Drank 1 cup!  ${currentCups}/${targetCups} cups`);
+            } else {
+                 showMessage("You've reached your target!", 'error');
+            }
+        });
+
+        setTargetButton.addEventListener('click', () => {
+            const newTarget = parseInt(targetInput.value);
+            if (isNaN(newTarget) || newTarget <= 0) {
+                showMessage('Please enter a valid target (greater than 0).', 'error');
+                return;
+            }
+            targetCups = newTarget;
+            targetCupsDisplay.textContent = targetCups;
+            updateWaterLevel();
+            showMessage(`Target set to ${targetCups} cups!`);
+        });
+    </script>
+</body>
+</html>
