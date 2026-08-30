@@ -1,2 +1,2 @@
-Notion widgets
+misc widgets
 
