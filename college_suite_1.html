@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Search — Class of 2028</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════ */
+:root {
+  --green-deep:   #1B3D2F;
+  --green-mid:    #2E6B4F;
+  --green-rule:   #4A8C68;
+  --green-light:  #E8F0EB;
+  --green-pale:   #F1F6F3;
+  --bg:           #F8F7F3;
+  --white:        #FFFFFF;
+  --text:         #2C3830;
+  --text-meta:    #5A6B61;
+  --text-muted:   #8A9B90;
+  --border:       #D4DDD7;
+  --border-light: #E8EDEA;
+
+  /* Status colors */
+  --safety:       #2D6A0F;
+  --safety-bg:    #E8F5DE;
+  --realistic:    #1A4FA0;
+  --realistic-bg: #E3EFFE;
+  --sreach:       #8A500A;
+  --sreach-bg:    #FEF3DA;
+  --reach:        #A32020;
+  --reach-bg:     #FDEBEB;
+
+  --nav-h: 56px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.65;
+  padding-top: var(--nav-h);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOP NAV
+═══════════════════════════════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  background: var(--green-deep);
+  display: flex;
+  align-items: stretch;
+  z-index: 100;
+  box-shadow: 0 1px 12px rgba(0,0,0,0.18);
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 24px;
+  gap: 10px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+.nav-brand-icon {
+  width: 28px; height: 28px;
+  background: var(--green-rule);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.nav-brand-icon svg { width: 16px; height: 16px; fill: white; }
+.nav-brand-text {
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+.nav-brand-sub {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+.nav-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0 8px;
+}
+.nav-tab {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: none;
+  position: relative;
+  transition: color 0.15s;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.nav-tab:hover { color: rgba(255,255,255,0.88); }
+.nav-tab.active {
+  color: white;
+}
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 12px; right: 12px;
+  height: 2px;
+  background: var(--green-rule);
+  border-radius: 2px 2px 0 0;
+}
+.nav-tab .tab-icon {
+  margin-right: 7px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+.nav-meta {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+  color: rgba(255,255,255,0.38);
+  font-size: 0.72rem;
+  font-style: italic;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PAGE SECTIONS (show/hide)
+═══════════════════════════════════════════════════════ */
+.page-section { display: none; }
+.page-section.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════
+   PAGE HEADER (shared component)
+═══════════════════════════════════════════════════════ */
+.page-header {
+  background: var(--green-deep);
+  color: white;
+  padding: 44px 64px 40px;
+}
+.page-header h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-header .subtitle {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+}
+.page-header .profile-chip {
+  display: inline-block;
+  margin-top: 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 100px;
+  padding: 4px 14px;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.75);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ① SCHOOL PROFILES PAGE
+═══════════════════════════════════════════════════════ */
+.criteria-bar {
+  background: var(--green-light);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 64px;
+  font-size: 0.82rem;
+  color: var(--text-meta);
+}
+.criteria-bar strong { color: var(--green-deep); font-weight: 600; }
+.criteria-pills {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+}
+.criteria-pill {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 0.76rem;
+  color: var(--green-mid);
+  font-weight: 500;
+}
+
+.profiles-content { max-width: 820px; margin: 0 auto; padding: 44px 40px 72px; }
+.group-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 44px 0 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.group-label:first-child { margin-top: 0; }
+
+.school-entry {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 0 18px;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border-light);
+}
+.school-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.school-num {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  color: var(--green-rule);
+  font-weight: normal;
+  line-height: 1.4;
+  text-align: right;
+  padding-top: 1px;
+}
+.school-body {
+  border-left: 3px solid var(--green-rule);
+  padding-left: 18px;
+}
+.school-header {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 7px; margin-bottom: 5px;
+}
+.school-name {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--green-deep);
+  line-height: 1.3;
+}
+.tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.01em;
+}
+.tag-state { background: var(--green-light); color: var(--green-mid); border: 1px solid var(--border); }
+.tag-pub { background: #EAF3FE; color: #1A55A0; border: 1px solid #C5DAEE; }
+.tag-priv { background: #FEF3E8; color: #9A4A10; border: 1px solid #EDD8BE; }
+.school-text {
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.profiles-footer {
+  background: var(--green-light);
+  border-top: 1px solid var(--border);
+  padding: 18px 64px;
+  font-size: 0.78rem;
+  color: var(--text-meta);
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ② TIMELINE PAGE
+═══════════════════════════════════════════════════════ */
+.timeline-content { padding: 44px 64px 72px; max-width: 1200px; }
+
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.phase-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.phase-card.now {
+  border-color: var(--green-rule);
+  box-shadow: 0 0 0 2px rgba(74,140,104,0.2);
+}
+.phase-card::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: var(--border);
+}
+.phase-card.now::before { background: var(--green-rule); }
+.phase-card.phase-2::before { background: #4A7AAA; }
+.phase-card.phase-3::before { background: #7A5FAA; }
+.phase-card.phase-4::before { background: #AA6B2E; }
+.phase-card.phase-5::before { background: #AA3A3A; }
+.phase-card.phase-6::before { background: #2C3830; }
+
+.phase-head {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+.phase-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge-now { background: var(--safety-bg); color: var(--safety); }
+.badge-next { background: #EAF3FE; color: #1A55A0; }
+.badge-spring { background: #F0EAFE; color: #5A3FA0; }
+.badge-summer { background: #FEF3DA; color: var(--sreach); }
+.badge-srfall { background: #FDEBEB; color: var(--reach); }
+.badge-decide { background: #2C3830; color: white; }
+
+.phase-title {
+  font-family: Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: var(--green-deep);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+.phase-card.now .phase-title { color: var(--green-deep); }
+.phase-window {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.phase-tasks {
+  padding: 14px 20px 18px;
+  list-style: none;
+}
+.phase-task {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.phase-task:last-child { margin-bottom: 0; }
+.task-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-rule);
+  margin-top: 6px;
+}
+.phase-card.now .task-dot { background: var(--green-rule); }
+.phase-card.phase-2 .task-dot { background: #4A7AAA; }
+.phase-card.phase-3 .task-dot { background: #7A5FAA; }
+.phase-card.phase-4 .task-dot { background: #AA6B2E; }
+.phase-card.phase-5 .task-dot { background: #AA3A3A; }
+.phase-card.phase-6 .task-dot { background: #2C3830; }
+
+.task-text strong { font-weight: 600; color: var(--green-deep); }
+.phase-card.now .task-text strong { color: var(--green-deep); }
+
+.timeline-note {
+  margin-top: 24px;
+  background: var(--green-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 20px;
+  font-size: 0.8rem;
+  color: var(--text-meta);
+  line-height: 1.6;
+}
+.timeline-note strong { color: var(--green-deep); }
+
+/* ═══════════════════════════════════════════════════════
+   ③ TRACKER PAGE
+═══════════════════════════════════════════════════════ */
+.tracker-wrap { padding: 20px 24px 28px; }
+
+/* Tracker filter bar */
+.tracker-controls {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  margin-bottom: 12px;
+}
+.t-filter {
+  font-size: 11px; padding: 3px 10px; border-radius: 100px;
+  border: 0.5px solid var(--border); background: transparent;
+  color: var(--text-meta); cursor: pointer; white-space: nowrap; line-height: 1.6;
+}
+.t-filter.active, .t-filter:hover {
+  background: var(--green-light); color: var(--text); border-color: #aaa;
+}
+.t-search {
+  font-size: 11px; padding: 4px 8px; border-radius: 6px;
+  border: 0.5px solid var(--border); background: white;
+  color: var(--text); height: 28px; outline: none; margin-left: auto; width: 120px;
+}
+
+/* Tracker tabs */
+.tracker-tabs {
+  display: flex; gap: 3px; margin-bottom: 10px;
+  border-bottom: 0.5px solid var(--border); padding-bottom: 3px;
+}
+.t-tab {
+  font-size: 11px; padding: 4px 12px; border-radius: 100px;
+  cursor: pointer; color: var(--text-muted); border: none; background: transparent;
+}
+.t-tab.active { background: var(--green-light); color: var(--text); font-weight: 500; }
+
+/* Stats row */
+.t-stats { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.t-stat {
+  background: var(--green-pale); border-radius: 7px;
+  padding: 7px 12px; flex: 1; min-width: 80px;
+}
+.t-stat .sl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+.t-stat .sv { font-size: 17px; font-weight: 600; color: var(--text); margin-top: 1px; }
+
+/* Tracker legend */
+.t-legend {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+  font-size: 10px; color: var(--text-muted); align-items: center;
+}
+.t-ld { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+/* Table */
+.t-tbl-wrap { overflow-x: auto; border-radius: 7px; border: 0.5px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+th {
+  background: var(--green-pale); color: var(--text-muted); font-weight: 500;
+  font-size: 10px; text-transform: uppercase; letter-spacing: .04em;
+  padding: 8px 10px; text-align: left; border-bottom: 0.5px solid var(--border);
+  white-space: nowrap; cursor: pointer; position: sticky; top: 0; z-index: 3;
+}
+th:hover { color: var(--text); }
+td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--green-pale); }
+
+/* Tracker badges */
+.badge {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 100px; white-space: nowrap; line-height: 1.5;
+}
+.b-safety { background: var(--safety-bg); color: var(--safety); }
+.b-realistic { background: var(--realistic-bg); color: var(--realistic); }
+.b-sreach { background: var(--sreach-bg); color: var(--sreach); }
+.b-reach { background: var(--reach-bg); color: var(--reach); }
+.b-green { background: #E8F5DE; color: #2D6A0F; }
+.b-blue { background: var(--realistic-bg); color: var(--realistic); }
+.b-amber { background: var(--sreach-bg); color: var(--sreach); }
+.b-red { background: var(--reach-bg); color: var(--reach); }
+.b-teal { background: #DFF5EE; color: #0F6E56; }
+.b-gray { background: #F0EDE8; color: #5A5855; }
+.b-instate { background: #D6E3F7; color: #1a3070; }
+.b-purple { background: #EEECFE; color: #5046B6; }
+.b-moved { background: #FFF3C4; color: #7A5800; }
+.b-di-vi { background: var(--safety); color: white; }
+.b-di-con { background: var(--realistic-bg); color: var(--realistic); }
+.b-di-no { background: #F0EDE8; color: #5A5855; }
+
+.money { font-variant-numeric: tabular-nums; font-size: 11px; }
+.mlo { color: var(--safety); }
+.mmd { color: var(--sreach); }
+.mhi { color: var(--reach); }
+.dist-ok { color: var(--safety); font-weight: 500; }
+.dist-far { color: var(--reach); }
+.stf-good { color: var(--safety); font-weight: 500; }
+.stf-mid { color: var(--sreach); }
+.stf-large { color: var(--reach); }
+
+.bar-wrap { background: #eee; border-radius: 3px; height: 5px; width: 42px; display: inline-block; vertical-align: middle; margin-left: 3px; }
+.bar-fill { background: var(--green-rule); border-radius: 3px; height: 5px; }
+
+.notes-ta {
+  width: 100%; font-size: 10px; background: transparent; border: none;
+  border-bottom: 0.5px solid var(--border); color: var(--text);
+  padding: 2px 0; font-family: inherit; resize: none; line-height: 1.5;
+}
+.notes-ta:focus { outline: none; border-bottom-color: #aaa; }
+.fit-sel {
+  font-size: 10px; background: transparent; border: none;
+  color: var(--text); font-family: inherit; cursor: pointer; width: 100%;
+}
+a.sl { color: var(--text); text-decoration: none; font-weight: 500; }
+a.sl:hover { text-decoration: underline; color: var(--realistic); }
+.sz-line { font-size: 11px; color: var(--text); }
+.sz-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .page-header { padding: 32px 20px 28px; }
+  .page-header h1 { font-size: 1.6rem; }
+  .criteria-bar { padding: 12px 20px; }
+  .profiles-content { padding: 32px 16px 60px; }
+  .profiles-footer { padding: 16px 20px; }
+  .timeline-content { padding: 28px 16px 60px; }
+  .tracker-wrap { padding: 14px 12px 28px; }
+  .nav-meta { display: none; }
+  .nav-tab .tab-icon { margin-right: 4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     TOP NAV
+════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">
+      <svg viewBox="0 0 16 16"><path d="M8 1a5 5 0 100 10A5 5 0 008 1zM6 8a2 2 0 114 0 2 2 0 01-4 0z"/><path d="M3 14h10a1 1 0 000-2H3a1 1 0 000 2z"/></svg>
+    </div>
+    <div>
+      <div class="nav-brand-text">College Search</div>
+      <div class="nav-brand-sub">Class of 2028 · MD Resident</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('profiles',this)">
+      <span class="tab-icon">🏫</span>School Profiles
+    </button>
+    <button class="nav-tab" onclick="showPage('timeline',this)">
+      <span class="tab-icon">📅</span>Timeline
+    </button>
+    <button class="nav-tab" onclick="showPage('tracker',this)">
+      <span class="tab-icon">📊</span>School Tracker
+    </button>
+  </div>
+  <div class="nav-meta">3.57 UW · 4.11 W · Junior year</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1: SCHOOL PROFILES
+════════════════════════════════════════════════════ -->
+<section class="page-section active" id="page-profiles">
+  <div class="page-header">
+    <h1>School Profiles</h1>
+    <div class="subtitle">Why each school made the list</div>
+  </div>
+
+  <div class="criteria-bar">
+    <strong>Selection criteria</strong>
+    <div class="criteria-pills">
+      <span class="criteria-pill">IHSA or equine degree</span>
+      <span class="criteria-pill">Pre-veterinary / animal science pipeline</span>
+      <span class="criteria-pill">Beautiful campus</span>
+      <span class="criteria-pill">Within 3 hours of DC or Providence RI</span>
+      <span class="criteria-pill">Maryland residency context</span>
+    </div>
+  </div>
+
+  <main class="profiles-content">
+
+    <div class="group-label">Strong veterinary focus</div>
+
+    <div class="school-entry">
+      <div class="school-num">1</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Virginia Tech</span>
+          <span class="tag tag-state">VA</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">One of the strongest animal science and pre-vet pipelines in the Mid-Atlantic, with an IHSA equestrian team and a dedicated Equine Science program. A natural anchor school for a student serious about large animal veterinary medicine.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">2</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of Maryland</span>
+          <span class="tag tag-state">MD</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">Your in-state flagship at ~$25k sticker, with exceptional value for a strong animal science and pre-vet track and 86% vet school acceptance rates. Located 15 miles from DC, it also provides unmatched access to USDA and NIH research internships.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">3</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Cornell University</span>
+          <span class="tag tag-state">NY</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">The gold standard for animal science and pre-vet in the Northeast: Cornell's College of Agriculture and Life Sciences offers direct proximity to an Ivy League vet school, a competitive IHSA team, and equine science coursework. Test scores are now required, and it's a significant reach, but worth including for an ambitious student.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">4</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Centenary University</span>
+          <span class="tag tag-state">NJ</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">An underrated gem with a purpose-built BS in Animal Health and Pre-Veterinary Medicine that uses horses as the primary animal model — arguably the most directly aligned academic program on the entire list. Sits neatly between DC and Providence at 205–260 miles from each.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">5</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">West Virginia University</span>
+          <span class="tag tag-state">WV</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">At ~$32k OOS sticker, WVU offers one of the best value propositions on the list, with an IHSA equestrian team, an Equine Studies concentration, and a strong Animal and Nutritional Sciences department. An often-overlooked option for serious pre-vet preparation without flagship price tags.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">6</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Delaware Valley University</span>
+          <span class="tag tag-state">PA</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A small, agriculture-focused university with deep roots in Animal Science and Veterinary Technology, located just 145 miles from DC. Its size and hands-on farm facilities make it ideal for a student who wants close faculty relationships and early access to large animals.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">7</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">SUNY Morrisville</span>
+          <span class="tag tag-state">NY</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">The most affordable option on the list at ~$22k OOS, SUNY Morrisville has its own horse herd and a hands-on Vet Tech and Animal Science program that offers early, direct large-animal experience. A strong safety that provides genuine pre-vet preparation.</p>
+      </div>
+    </div>
+
+    <div class="group-label">Geographic fit — DC radius</div>
+
+    <div class="school-entry">
+      <div class="school-num">8</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of Delaware</span>
+          <span class="tag tag-state">DE</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">A well-rounded Animal & Food Science program just 110 miles from DC, with an IHSA club team and strong merit aid availability. A solid, accessible option that sits comfortably within the DC-to-Providence corridor.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">9</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Goucher College</span>
+          <span class="tag tag-state">MD</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A beautiful, wooded campus just 50 miles from DC with an IHSA team and an equestrian studies minor — a rare combination at a small liberal arts college. Generous need-based and merit aid makes the sticker price more approachable for Maryland families.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">10</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Rutgers University</span>
+          <span class="tag tag-state">NJ</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">The School of Environmental and Biological Sciences (SEBS) offers a well-regarded Animal Science program with pre-vet advising at a competitive OOS sticker (~$37k). Rutgers sits between DC and Providence and gives access to New Jersey's agricultural extension network.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">11</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">George Mason University</span>
+          <span class="tag tag-state">VA</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">A strong academic safety option just 20 miles from DC, with merit aid available at an accessible OOS price. It rounds out the list as a fallback that keeps a student close to home and within the strong DC-area veterinary and research community.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">12</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Stevenson University</span>
+          <span class="tag tag-state">MD</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A Maryland private option just 45 miles from DC with generous merit aid and an IHSA club team, offering an accessible local fallback for a student who wants to stay close to home. Lower selectivity makes it a reliable safety on the list.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">13</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">McDaniel College</span>
+          <span class="tag tag-state">MD</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A distinctive Maryland liberal arts college that is fully test-blind — scores are never considered, making it a particularly welcoming option for students whose strengths lie outside standardized testing. Located just 65 miles from DC with solid pre-health advising and merit aid.</p>
+      </div>
+    </div>
+
+    <div class="group-label">Providence radius</div>
+
+    <div class="school-entry">
+      <div class="school-num">14</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of New Hampshire</span>
+          <span class="tag tag-state">NH</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">The standout Providence-radius school for this profile — UNH offers an actual Equine Management degree alongside a dedicated pre-vet advising program, all just 55 miles from Providence. One of the few schools on the list where horses are central to the academic experience, not just a club activity.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">15</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of Connecticut</span>
+          <span class="tag tag-state">CT</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">A strong Animal Science program with a clear pre-vet pathway, located 90 miles from Providence and offering merit aid. UConn's pathobiology and veterinary sciences track is particularly well-suited for students targeting large animal or food-animal medicine.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">16</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">UMass Amherst</span>
+          <span class="tag tag-state">MA</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">A well-regarded Animal Science department within easy reach of Providence, with merit aid available and a lively campus that still offers quiet corners for a social introvert. Strong research opportunities through the New England agriculture community.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">17</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of Rhode Island</span>
+          <span class="tag tag-state">RI</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">Located just 30 miles from Providence, URI is the clear anchor for the northern radius, offering an Animal and Veterinary Science program, merit aid, and an IHSA club team on an attractive coastal New England campus.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">18</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of Vermont</span>
+          <span class="tag tag-state">VT</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">Burlington's picture-perfect campus on Lake Champlain pairs with a solid Animal Science department and proximity to Vermont's working farm community — ideal for large animal experience hours. Located 220 miles from Providence, it fits the northern radius well.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">19</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Colby College</span>
+          <span class="tag tag-state">ME</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A visually stunning, highly residential campus that meets 100% of demonstrated need, bringing the ~$91k sticker down to ~$22k average net price. A strong liberal arts pre-vet pathway for a student who wants a tight-knit community and is a competitive applicant.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">20</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Stony Brook University</span>
+          <span class="tag tag-state">NY</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">A strong research university with an Animal Science and pre-vet track, located 185 miles from Providence and within reasonable range of Long Island's active equestrian community. Offers excellent value as a SUNY school and merit aid for out-of-state students.</p>
+      </div>
+    </div>
+
+    <div class="group-label">Campus beauty &amp; social fit</div>
+
+    <div class="school-entry">
+      <div class="school-num">21</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">James Madison University</span>
+          <span class="tag tag-state">VA</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">Consistently ranked among the most beautiful campuses in the nation, JMU offers a welcoming mid-size environment ideal for a social introvert — and at ~$32k OOS, it's one of the most affordable non-Maryland public options on the list.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">22</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">University of Virginia</span>
+          <span class="tag tag-state">VA</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">An architecturally stunning Jeffersonian campus with a strong pre-vet biology track and one of the best need-based aid programs among public universities, meeting 100% of demonstrated need. A reach worth pursuing if grades and scores are strong.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">23</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Sweet Briar College</span>
+          <span class="tag tag-state">VA</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">One of the most horse-forward colleges in the country, with its own riding facilities, a competitive IHSA program, and a breathtaking campus in the Blue Ridge foothills. Its all-women, close-knit community is particularly well-suited to a social introvert who thrives with deep connections over large crowds.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">24</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Skidmore College</span>
+          <span class="tag tag-state">NY</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A gorgeous campus in Saratoga Springs — the horse racing capital of the Northeast — with strong pre-health biology advising and a longstanding test-optional policy. The Saratoga equine community offers exceptional large-animal shadowing opportunities right off campus.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">25</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Middlebury College</span>
+          <span class="tag tag-state">VT</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">One of the most beautiful campuses in New England, meeting 100% of demonstrated need — the ~$88k sticker can come down dramatically for qualifying families. A reach for academic profile, but worth exploring for a student who values a stunning, intimate liberal arts environment.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">26</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Bucknell University</span>
+          <span class="tag tag-state">PA</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A stunning riverside campus in Lewisburg, PA with a strong pre-health biology program, an IHSA club team, and generous merit aid. Bucknell's small size and deeply residential culture are a natural match for a social introvert who wants a close faculty-student environment.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">27</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Dickinson College</span>
+          <span class="tag tag-state">PA</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">A charming, historic campus in Carlisle, PA — only 155 miles from DC — with strong pre-health biology advising and generous merit aid for strong students. Dickinson's small, tightly-knit community and emphasis on sustainability aligns naturally with an interest in agriculture and animal science.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">28</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Ithaca College</span>
+          <span class="tag tag-state">NY</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">Set on a dramatic hillside campus overlooking Cayuga Lake, Ithaca College offers strong pre-health biology preparation in a mid-size environment that balances social activity with quieter residential life. Located near Cornell's vet school, motivated students can sometimes access cross-registration or research opportunities.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">29</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Penn State</span>
+          <span class="tag tag-state">PA</span><span class="tag tag-pub">Public</span>
+        </div>
+        <p class="school-text">A nationally respected Animal Science program paired with an IHSA equestrian team and an equine science minor, all set on one of the most beautiful large campuses in the country. An excellent fit academically and aesthetically.</p>
+      </div>
+    </div>
+
+    <div class="school-entry">
+      <div class="school-num">30</div>
+      <div class="school-body">
+        <div class="school-header">
+          <span class="school-name">Wilson College</span>
+          <span class="tag tag-state">PA</span><span class="tag tag-priv">Private</span>
+        </div>
+        <p class="school-text">Perhaps the most overlooked gem on the list: Wilson offers both an IHSA equestrian program and a dedicated Equestrian Studies degree alongside an Animal Studies and pre-vet track, all on a beautiful 300-acre campus 165 miles from DC. Small class sizes and a strong agricultural identity make it an excellent fit for a horse-first student.</p>
+      </div>
+    </div>
+
+  </main>
+  <div class="profiles-footer">
+    All financial figures are 2024–25 estimates. Testing policies and costs change annually — always verify on each school's official admissions website.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2: TIMELINE
+════════════════════════════════════════════════════ -->
+<section class="page-section" id="page-timeline">
+  <div class="page-header">
+    <h1>College Search Timeline</h1>
+    <div class="subtitle">Six phases from now through May 1st, 2029</div>
+    <div class="profile-chip">Currently: Phase 1 — Junior year has just started</div>
+  </div>
+
+  <div class="timeline-content">
+    <div class="timeline-grid">
+
+      <div class="phase-card now">
+        <div class="phase-head">
+          <div class="phase-badge badge-now">Now — Active</div>
+          <div class="phase-title">Junior Year Begins</div>
+          <div class="phase-window">September – December 2026</div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text"><strong>Test prep underway</strong> — currently researching programs; decide on SAT vs. ACT and enroll in a course</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text"><strong>Start your riding/experience log now</strong> — date, location, hours, animal type; vet schools expect 100+ large-animal hours</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Take PSAT in October (practice baseline)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Use the tracker to narrow 30 schools to ~15</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Browse top school websites, equestrian team pages, virtual tours</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Seek large-animal shadowing: equine vets, farrier visits, livestock opportunities near home</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Focus on junior-year grades — this transcript matters most</span></li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-2">
+        <div class="phase-head">
+          <div class="phase-badge badge-next">Phase 2</div>
+          <div class="phase-title">Junior Year — Visits &amp; Testing</div>
+          <div class="phase-window">January – May 2027</div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Take SAT or ACT (March or May sitting — aim for first real score)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Begin campus visits — start with DC-radius schools (closer, easier spring weekend trips)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Email IHSA coaches at top 5–6 schools to express interest and ask about team culture</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Visit <strong>Dickinson</strong> — DI rated Very Important there, so a visit has direct admissions value</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Finalize working list of ~12–15 schools in tracker</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Ask two teachers for letters of recommendation (before summer)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Continue logging riding and large-animal experience hours</span></li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-3">
+        <div class="phase-head">
+          <div class="phase-badge badge-spring">Phase 3</div>
+          <div class="phase-title">Summer Before Senior Year</div>
+          <div class="phase-window">June – August 2027</div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">SAT/ACT retake if needed (June or August)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Run Net Price Calculators on all schools in your final list</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Check Academic Common Market eligibility for any VA public schools (animal science programs)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Brainstorm Common App essay — personal statement draft by August</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Visit remaining schools on the list (Providence-radius batch)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Continue large-animal shadowing — log every session</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Finalize EA/ED strategy: identify your top 1–2 schools</span></li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-4">
+        <div class="phase-head">
+          <div class="phase-badge badge-summer">Phase 4</div>
+          <div class="phase-title">Senior Fall — Applications</div>
+          <div class="phase-window">September – November 2028</div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Submit EA/ED applications by Nov 1–15 deadlines</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Complete all Regular Decision applications (most due Jan 1–15)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Request official transcripts and test scores sent to all schools</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Confirm recommendation letters submitted by teachers and counselor</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Write supplemental essays — especially "Why this school?" for each</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Apply for FAFSA as soon as it opens (October 1)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Submit CSS Profile if required (private schools)</span></li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-5">
+        <div class="phase-head">
+          <div class="phase-badge badge-srfall">Phase 5</div>
+          <div class="phase-title">Senior Spring — Decisions</div>
+          <div class="phase-window">January – April 2029</div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Receive Regular Decision results (late March)</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Compare all financial aid award letters side by side</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Appeal aid awards if needed — especially at schools that meet demonstrated need</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Attend Admitted Student Days at your top choices</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Contact IHSA coaches at finalist schools to discuss team fit and placement</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Make final decision and submit enrollment deposit</span></li>
+        </ul>
+      </div>
+
+      <div class="phase-card phase-6">
+        <div class="phase-head">
+          <div class="phase-badge badge-decide">Phase 6</div>
+          <div class="phase-title">Commit</div>
+          <div class="phase-window">May 1, 2029</div>
+        </div>
+        <ul class="phase-tasks">
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text"><strong>National Decision Day — May 1</strong> is the universal deposit deadline</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Withdraw applications from any schools you won't attend</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Notify your counselor of your decision</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Connect with IHSA coach and incoming team members</span></li>
+          <li class="phase-task"><span class="task-dot"></span><span class="task-text">Begin housing and orientation registration</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="timeline-note">
+      <strong>Key priority right now:</strong> Start your large-animal experience log today — create a simple spreadsheet with date, location, hours, and a one-line description of what you observed or did. Vet schools expect 100+ documented large-animal hours; the earlier you start logging, the less stressful this becomes senior year.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3: TRACKER
+════════════════════════════════════════════════════ -->
+<section class="page-section" id="page-tracker">
+  <div class="page-header">
+    <h1>School Tracker</h1>
+    <div class="subtitle">30 schools · filterable · sortable · editable notes</div>
+    <div class="profile-chip">3.57 UW · 4.11 W · 2 AP · MD resident · Class of 2028</div>
+  </div>
+
+  <div class="tracker-wrap">
+    <div class="tracker-controls">
+      <button class="t-filter active" onclick="setFilter('all',this)">All 30</button>
+      <button class="t-filter" onclick="setFilter('safety',this)">Safety</button>
+      <button class="t-filter" onclick="setFilter('realistic',this)">Realistic</button>
+      <button class="t-filter" onclick="setFilter('sreach',this)">Slight reach</button>
+      <button class="t-filter" onclick="setFilter('reach',this)">Reach</button>
+      <button class="t-filter" onclick="setFilter('prevetq',this)">Pre-vet ✓</button>
+      <button class="t-filter" onclick="setFilter('budget',this)">Under $45k</button>
+      <button class="t-filter" onclick="setFilter('dc3hr',this)">≤3 hrs DC</button>
+      <button class="t-filter" onclick="setFilter('pvd3hr',this)">≤3 hrs PVD</button>
+      <button class="t-filter" onclick="setFilter('smallclass',this)">S:F ≤12:1</button>
+      <button class="t-filter" onclick="setFilter('nogreek',this)">No Greek life</button>
+      <button class="t-filter" onclick="setFilter('small',this)">Small (&lt;5k UG)</button>
+      <input type="text" class="t-search" placeholder="Search…" id="searchBox" oninput="renderTable()">
+    </div>
+
+    <div class="tracker-tabs">
+      <button class="t-tab active" onclick="switchTab('overview',this)">Overview</button>
+      <button class="t-tab" onclick="switchTab('financial',this)">Financial</button>
+      <button class="t-tab" onclick="switchTab('academic',this)">Academic fit</button>
+      <button class="t-tab" onclick="switchTab('testing',this)">Testing policy</button>
+      <button class="t-tab" onclick="switchTab('campus',this)">Campus life</button>
+    </div>
+
+    <div class="t-legend">
+      <span style="display:flex;align-items:center;gap:3px"><span class="t-ld" style="background:#2D6A0F"></span>Safety</span>
+      <span style="display:flex;align-items:center;gap:3px"><span class="t-ld" style="background:#1A4FA0"></span>Realistic</span>
+      <span style="display:flex;align-items:center;gap:3px"><span class="t-ld" style="background:#8A500A"></span>Slight reach</span>
+      <span style="display:flex;align-items:center;gap:3px"><span class="t-ld" style="background:#A32020"></span>Reach</span>
+      <span class="badge b-di-vi" style="font-size:9px">Very Important</span>
+      <span class="badge b-di-con" style="font-size:9px">Considered</span>
+      <span class="badge b-di-no" style="font-size:9px">Not tracked</span>
+      <span style="font-size:10px;color:var(--text-muted)">= Demonstrated Interest</span>
+    </div>
+
+    <div class="t-stats" id="statsRow"></div>
+    <div class="t-tbl-wrap"><table id="mainTable"><thead id="tHead"></thead><tbody id="tBody"></tbody></table></div>
+  </div>
+</section>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════ */
+function showPage(id, btn) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ═══════════════════════════════════════════════════
+   TRACKER DATA
+═══════════════════════════════════════════════════ */
+const schools = [
+  {name:"Virginia Tech",url:"https://www.admissions.vt.edu/",st:"VA",tp:"Public",instate:false,totalUG:31035,freshClass:7289,stf:17,eq:"IHSA + Eq Science",pv:"Animal Sci / Pre-vet",campus:"★★★★",distDC:240,distPVD:700,cost:36000,np:22000,aid:58,accept:66,sat:"1150–1370",merit:true,need:76,test:"optional",testNote:"Test-optional through Fall 2028",fit:"realistic",moved:false,fitNote:"66% accept; 3.57 UW solidly in range.",rationale:"One of the strongest animal science and pre-vet pipelines in the Mid-Atlantic, with an IHSA equestrian team and a dedicated Equine Science program. A natural anchor school for a student serious about large animal veterinary medicine.",greek:"~18% overall",greekNote:"Frats + sororities; large but not dominant",diLevel:"not_considered"},
+  {name:"University of Maryland",url:"https://admissions.umd.edu/",st:"MD",tp:"Public",instate:true,totalUG:31272,freshClass:4750,stf:17,eq:"IHSA club team",pv:"Animal Science",campus:"★★★",distDC:15,distPVD:380,cost:25000,np:16000,aid:70,accept:44,sat:"1270–1470",merit:true,need:78,test:"optional",testNote:"Test-optional",fit:"realistic",moved:true,fitNote:"44% accept; 3.57 UW now in competitive zone for in-state applicants.",rationale:"Your in-state flagship at ~$25k sticker, with exceptional value for a strong animal science and pre-vet track and 86% vet school acceptance rates. Located 15 miles from DC, it also provides unmatched access to USDA and NIH research internships.",greek:"~11% overall",greekNote:"9% frats / 12% sororities; present but not dominant",diLevel:"not_considered"},
+  {name:"University of Delaware",url:"https://admissions.udel.edu/",st:"DE",tp:"Public",instate:false,totalUG:19400,freshClass:4100,stf:13,eq:"IHSA club team",pv:"Animal & Food Sci",campus:"★★★★",distDC:110,distPVD:240,cost:45000,np:24000,aid:60,accept:72,sat:"1170–1380",merit:true,need:70,test:"optional",testNote:"Test-optional",fit:"realistic",moved:false,fitNote:"72% accept; 3.57 UW comfortably in range.",rationale:"A well-rounded Animal & Food Science program just 110 miles from DC, with an IHSA club team and strong merit aid availability. A solid, accessible option that sits comfortably within the DC-to-Providence corridor.",greek:"~23% overall",greekNote:"20% frats / 25% sororities; moderately active Greek scene",diLevel:"considered"},
+  {name:"Penn State",url:"https://admissions.psu.edu/",st:"PA",tp:"Public",instate:false,totalUG:40839,freshClass:8200,stf:15,eq:"IHSA + Eq minor",pv:"Animal Science",campus:"★★★★★",distDC:195,distPVD:390,cost:44000,np:28000,aid:55,accept:55,sat:"1190–1390",merit:false,need:68,test:"optional",testNote:"Test-optional through Fall 2026; policy under review",fit:"realistic",moved:true,fitNote:"55% accept; 3.57 UW solidly in range for animal science.",rationale:"A nationally respected Animal Science program paired with an IHSA equestrian team and an equine science minor, all set on one of the most beautiful large campuses in the country. An excellent fit academically and aesthetically.",greek:"Not reported",greekNote:"Greek life exists; participation % not publicly reported",diLevel:"not_considered"},
+  {name:"James Madison University",url:"https://www.jmu.edu/admissions/",st:"VA",tp:"Public",instate:false,totalUG:21400,freshClass:4850,stf:17,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★★★",distDC:135,distPVD:700,cost:32000,np:20000,aid:54,accept:79,sat:"1090–1270",merit:true,need:65,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"79% accept; 3.57 UW above typical range — solid safety.",rationale:"Consistently ranked among the most beautiful campuses in the nation, JMU offers a welcoming mid-size environment ideal for a social introvert — and at ~$32k OOS, it's one of the most affordable non-Maryland public options on the list.",greek:"Not reported",greekNote:"Greek life present; % not reported in CDS",diLevel:"considered"},
+  {name:"University of Virginia",url:"https://www.virginia.edu/admission",st:"VA",tp:"Public",instate:false,totalUG:17901,freshClass:3900,stf:14,eq:"IHSA club team",pv:"Biology / pre-vet track",campus:"★★★★★",distDC:120,distPVD:750,cost:56000,np:18000,aid:72,accept:20,sat:"1370–1540",merit:false,need:100,test:"optional",testNote:"Test-optional for Fall 2026",fit:"sreach",moved:true,fitNote:"17% accept; 3.57/4.11 moves to slight reach — strong essays and test scores needed.",rationale:"An architecturally stunning Jeffersonian campus with a strong pre-vet biology track and one of the best need-based aid programs among public universities, meeting 100% of demonstrated need. A reach worth pursuing if grades and scores are strong.",greek:"~28% overall",greekNote:"~28% of undergrads in Greek orgs; significant social presence",diLevel:"not_considered"},
+  {name:"Cornell University",url:"https://admissions.cornell.edu/",st:"NY",tp:"Private",instate:false,totalUG:15503,freshClass:3600,stf:9,eq:"IHSA + Eq Science",pv:"Animal Science / CALS",campus:"★★★★★",distDC:355,distPVD:280,cost:87000,np:25000,aid:78,accept:11,sat:"1480–1560",merit:false,need:100,test:"required",testNote:"Test-REQUIRED as of Fall 2026; SAT or ACT",fit:"reach",moved:false,fitNote:"8% accept; test-required Ivy — aspirational, worth including.",rationale:"The gold standard for animal science and pre-vet in the Northeast: Cornell's College of Agriculture and Life Sciences offers direct proximity to an Ivy League vet school, a competitive IHSA team, and equine science coursework. Test scores are now required, and it's a significant reach, but worth including for an ambitious student.",greek:"Not reported",greekNote:"Greek life active; % not reported in CDS",diLevel:"not_considered"},
+  {name:"Univ. of New Hampshire",url:"https://www.unh.edu/admissions/",st:"NH",tp:"Public",instate:false,totalUG:13200,freshClass:2800,stf:17,eq:"IHSA + Eq Mgmt degree",pv:"Pre-vet program",campus:"★★★★",distDC:610,distPVD:55,cost:40000,np:24000,aid:52,accept:87,sat:"1060–1250",merit:true,need:63,test:"optional",testNote:"Test-optional; very low score submission rate",fit:"safety",moved:false,fitNote:"88% accept; 3.57 UW strong fit — reliable safety near Providence.",rationale:"The standout Providence-radius school for this profile — UNH offers an actual Equine Management degree alongside a dedicated pre-vet advising program, all just 55 miles from Providence. One of the few schools on the list where horses are central to the academic experience, not just a club activity.",greek:"~13% overall",greekNote:"15% frats / 10% sororities; present but not center of social life",diLevel:"not_considered"},
+  {name:"Univ. of Connecticut",url:"https://admissions.uconn.edu/",st:"CT",tp:"Public",instate:false,totalUG:19900,freshClass:3850,stf:17,eq:"IHSA club team",pv:"Animal Science",campus:"★★★★",distDC:420,distPVD:90,cost:44000,np:26000,aid:55,accept:56,sat:"1200–1400",merit:true,need:68,test:"optional",testNote:"Test-optional",fit:"realistic",moved:true,fitNote:"52% accept; 3.57 UW now comfortably in range.",rationale:"A strong Animal Science program with a clear pre-vet pathway, located 90 miles from Providence and offering merit aid. UConn's pathobiology and veterinary sciences track is particularly well-suited for students targeting large animal or food-animal medicine.",greek:"~12% overall",greekNote:"11% frats / 13% sororities",diLevel:"not_considered"},
+  {name:"UMass Amherst",url:"https://www.umass.edu/admissions/",st:"MA",tp:"Public",instate:false,totalUG:23400,freshClass:5200,stf:17,eq:"IHSA club team",pv:"Animal Science",campus:"★★★★",distDC:520,distPVD:100,cost:43000,np:22000,aid:57,accept:64,sat:"1230–1430",merit:true,need:72,test:"optional",testNote:"Test-optional",fit:"realistic",moved:false,fitNote:"60% accept; 3.57 UW comfortably in range.",rationale:"A well-regarded Animal Science department within easy reach of Providence, with merit aid available and a lively campus that still offers quiet corners for a social introvert. Strong research opportunities through the New England agriculture community.",greek:"~7% overall",greekNote:"7% frats / 7% sororities — low Greek presence",diLevel:"not_considered"},
+  {name:"Goucher College",url:"https://www.goucher.edu/admissions/",st:"MD",tp:"Private",instate:false,totalUG:1350,freshClass:320,stf:9,eq:"IHSA + Eq Studies minor",pv:"Pre-health / Biology",campus:"★★★★",distDC:50,distPVD:395,cost:56000,np:30000,aid:72,accept:82,sat:"1090–1290",merit:true,need:80,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"78% accept; 3.57 UW above typical range — comfortable safety.",rationale:"A beautiful, wooded campus just 50 miles from DC with an IHSA team and an equestrian studies minor — a rare combination at a small liberal arts college. Generous need-based and merit aid makes the sticker price more approachable for Maryland families.",greek:null,greekNote:"No Greek life — small liberal arts culture",diLevel:"considered"},
+  {name:"Sweet Briar College",url:"https://sbc.edu/admission/",st:"VA",tp:"Private",instate:false,totalUG:700,freshClass:175,stf:9,eq:"Strong IHSA + own horses",pv:"Biology track",campus:"★★★★★",distDC:185,distPVD:820,cost:48000,np:22000,aid:74,accept:85,sat:"1030–1250",merit:true,need:85,test:"optional",testNote:"Test-optional; all-women's college",fit:"safety",moved:false,fitNote:"85% accept; 3.57 UW well above typical admits.",rationale:"One of the most horse-forward colleges in the country, with its own riding facilities, a competitive IHSA program, and a breathtaking campus in the Blue Ridge foothills. Its all-women, close-knit community is particularly well-suited to a social introvert who thrives with deep connections over large crowds.",greek:null,greekNote:"No Greek life — all-women's college with strong community identity",diLevel:"not_considered"},
+  {name:"Centenary University",url:"https://www.centenaryuniversity.edu/admissions/",st:"NJ",tp:"Private",instate:false,totalUG:1950,freshClass:380,stf:11,eq:"IHSA + Equine pre-vet BS",pv:"BS Animal Health/Pre-vet",campus:"★★★",distDC:260,distPVD:205,cost:47000,np:25000,aid:70,accept:78,sat:"960–1160",merit:true,need:75,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"78% accept; 3.57 UW comfortably exceeds typical admits.",rationale:"An underrated gem with a purpose-built BS in Animal Health and Pre-Veterinary Medicine that uses horses as the primary animal model — arguably the most directly aligned academic program on the entire list. Sits neatly between DC and Providence at 205–260 miles from each.",greek:"~5% overall",greekNote:"Small Greek presence; campus life is equestrian-focused",diLevel:"not_considered"},
+  {name:"Skidmore College",url:"https://www.skidmore.edu/admissions/",st:"NY",tp:"Private",instate:false,totalUG:2700,freshClass:660,stf:8,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★★★",distDC:355,distPVD:265,cost:82000,np:34000,aid:68,accept:40,sat:"1270–1470",merit:false,need:97,test:"optional",testNote:"Test-optional since 2016",fit:"sreach",moved:true,fitNote:"21% accept; holistic TO — equestrian narrative with 3.57/4.11 is a real application.",rationale:"A gorgeous campus in Saratoga Springs — the horse racing capital of the Northeast — with strong pre-health biology advising and a longstanding test-optional policy. The Saratoga equine community offers exceptional large-animal shadowing opportunities right off campus.",greek:null,greekNote:"No Greek life — strong arts and outdoor club culture instead",diLevel:"considered"},
+  {name:"Colby College",url:"https://www.colby.edu/admission/",st:"ME",tp:"Private",instate:false,totalUG:2100,freshClass:560,stf:10,eq:"IHSA club team",pv:"Biology / Pre-vet track",campus:"★★★★★",distDC:640,distPVD:290,cost:91000,np:22000,aid:76,accept:13,sat:"1410–1540",merit:false,need:100,test:"optional",testNote:"Test-optional",fit:"reach",moved:false,fitNote:"7% accept; elite bar — true reach with exceptional aid if admitted.",rationale:"A visually stunning, highly residential campus that meets 100% of demonstrated need, bringing the ~$91k sticker down to ~$22k average net price. A strong liberal arts pre-vet pathway for a student who wants a tight-knit community and is a competitive applicant.",greek:null,greekNote:"No Greek life — residential house system instead",diLevel:"considered"},
+  {name:"University of Vermont",url:"https://www.uvm.edu/admissions",st:"VT",tp:"Public",instate:false,totalUG:13500,freshClass:2900,stf:17,eq:"IHSA club team",pv:"Animal Science",campus:"★★★★★",distDC:560,distPVD:220,cost:46000,np:28000,aid:55,accept:74,sat:"1170–1360",merit:true,need:65,test:"optional",testNote:"Test-optional",fit:"realistic",moved:false,fitNote:"65% accept; 3.57 UW fits well — comfortable realistic pick.",rationale:"Burlington's picture-perfect campus on Lake Champlain pairs with a solid Animal Science department and proximity to Vermont's working farm community — ideal for large animal experience hours. Located 220 miles from Providence, it fits the northern radius well.",greek:"~5-6% overall",greekNote:"5% frats / 6% sororities — very low; outdoor culture dominates",diLevel:"considered"},
+  {name:"West Virginia University",url:"https://admissions.wvu.edu/",st:"WV",tp:"Public",instate:false,totalUG:22200,freshClass:4300,stf:19,eq:"IHSA + Equine Studies",pv:"Animal & Nutr Sciences",campus:"★★★",distDC:230,distPVD:700,cost:32000,np:20000,aid:62,accept:83,sat:"1040–1240",merit:true,need:55,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"73% accept; 3.57 UW well above typical admit — reliable affordable safety.",rationale:"At ~$32k OOS sticker, WVU offers one of the best value propositions on the list, with an IHSA equestrian team, an Equine Studies concentration, and a strong Animal and Nutritional Sciences department. An often-overlooked option for students who want serious pre-vet preparation without flagship price tags.",greek:"~6-7% overall",greekNote:"7% frats / 6% sororities; Greek exists but minority",diLevel:"not_considered"},
+  {name:"Delaware Valley Univ.",url:"https://www.delval.edu/admissions",st:"PA",tp:"Private",instate:false,totalUG:2100,freshClass:480,stf:13,eq:"IHSA club team",pv:"Animal Science / Vet Tech",campus:"★★★",distDC:145,distPVD:280,cost:51000,np:27000,aid:62,accept:76,sat:"1000–1180",merit:true,need:70,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"76% accept; 3.57 UW well exceeds the typical admit.",rationale:"A small, agriculture-focused university with deep roots in Animal Science and Veterinary Technology, located just 145 miles from DC. Its size and hands-on farm facilities make it ideal for a student who wants close faculty relationships and early access to large animals.",greek:"~5% overall",greekNote:"Small Greek presence; campus life is agriculture-focused",diLevel:"not_considered"},
+  {name:"Rutgers University",url:"https://admissions.rutgers.edu/",st:"NJ",tp:"Public",instate:false,totalUG:36000,freshClass:7400,stf:16,eq:"IHSA club team",pv:"Animal Science (SEBS)",campus:"★★★",distDC:225,distPVD:220,cost:37000,np:21000,aid:58,accept:66,sat:"1220–1430",merit:false,need:68,test:"optional",testNote:"Test-optional",fit:"realistic",moved:false,fitNote:"41% accept (NB); 3.57 UW in competitive range.",rationale:"The School of Environmental and Biological Sciences (SEBS) offers a well-regarded Animal Science program with pre-vet advising at a competitive OOS sticker (~$37k). Rutgers sits between DC and Providence and gives access to New Jersey's agricultural extension network.",greek:"Not reported",greekNote:"Greek life present; % not reported in CDS",diLevel:"not_considered"},
+  {name:"Middlebury College",url:"https://www.middlebury.edu/admissions",st:"VT",tp:"Private",instate:false,totalUG:2780,freshClass:720,stf:9,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★★★",distDC:550,distPVD:235,cost:88000,np:28000,aid:76,accept:17,sat:"1400–1540",merit:false,need:100,test:"optional",testNote:"Test-optional",fit:"reach",moved:false,fitNote:"11% accept; median admit GPA ~4.0 UW — true reach despite improvements.",rationale:"One of the most beautiful campuses in New England, meeting 100% of demonstrated need — the ~$88k sticker can come down dramatically for qualifying families. A reach for academic profile, but worth exploring for a student who values a stunning, intimate liberal arts environment.",greek:null,greekNote:"No Greek life — social houses (college-run) instead",diLevel:"considered"},
+  {name:"George Mason Univ.",url:"https://www2.gmu.edu/admissions-aid",st:"VA",tp:"Public",instate:false,totalUG:26700,freshClass:3900,stf:16,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★",distDC:20,distPVD:425,cost:39000,np:18000,aid:58,accept:89,sat:"1100–1290",merit:true,need:60,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"87% accept; 3.57 UW above typical profile — reliable safety near DC.",rationale:"A strong academic safety option just 20 miles from DC, with merit aid available at an accessible OOS price. It rounds out the list as a fallback that keeps a student close to home and within the strong DC-area veterinary and research community.",greek:"~3-4% overall",greekNote:"3% frats / 4% sororities — very low; commuter campus culture",diLevel:"not_considered"},
+  {name:"Bucknell University",url:"https://www.bucknell.edu/admissions",st:"PA",tp:"Private",instate:false,totalUG:3700,freshClass:960,stf:9,eq:"IHSA club team",pv:"Animal Behavior track",campus:"★★★★★",distDC:240,distPVD:380,cost:82000,np:36000,aid:58,accept:36,sat:"1330–1510",merit:true,need:92,test:"optional",testNote:"Test-optional",fit:"sreach",moved:true,fitNote:"29% accept; 3.57/4.11 in competitive zone — test scores + essays needed.",rationale:"A stunning riverside campus in Lewisburg, PA with a strong pre-health biology program, an IHSA club team, and generous merit aid. Bucknell's small size and deeply residential culture are a natural match for a social introvert who wants a close faculty-student environment.",greek:"~37% overall",greekNote:"31% frats / 43% sororities — Greek life very prominent at Bucknell",diLevel:"considered"},
+  {name:"SUNY Morrisville",url:"https://www.morrisville.edu/admissions",st:"NY",tp:"Public",instate:false,totalUG:2900,freshClass:730,stf:16,eq:"IHSA D3 + own horses",pv:"Vet Tech / Animal Sci",campus:"★★★",distDC:380,distPVD:330,cost:22000,np:16000,aid:68,accept:90,sat:"900–1090",merit:true,need:50,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"90% accept; most affordable option, genuine hands-on pre-vet safety.",rationale:"The most affordable option on the list at ~$22k OOS, SUNY Morrisville has its own horse herd and a hands-on Vet Tech and Animal Science program that offers early, direct large-animal experience. A strong safety that provides genuine pre-vet preparation.",greek:"~5% overall",greekNote:"Small Greek presence; hands-on ag focus dominates campus life",diLevel:"not_considered"},
+  {name:"Univ. of Rhode Island",url:"https://web.uri.edu/admission/",st:"RI",tp:"Public",instate:false,totalUG:16800,freshClass:3500,stf:17,eq:"IHSA club team",pv:"Animal & Vet Sci",campus:"★★★★",distDC:490,distPVD:30,cost:41000,np:23000,aid:61,accept:80,sat:"1100–1290",merit:true,need:65,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"72% accept; 3.57 UW above typical range — comfortable safety and Providence anchor.",rationale:"Located just 30 miles from Providence, URI is the clear anchor for the northern radius, offering an Animal and Veterinary Science program, merit aid, and an IHSA club team on an attractive coastal New England campus.",greek:"~26% overall",greekNote:"24% frats / 28% sororities — moderately active Greek scene",diLevel:"considered"},
+  {name:"Dickinson College",url:"https://www.dickinson.edu/admissions",st:"PA",tp:"Private",instate:false,totalUG:2300,freshClass:590,stf:11,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★★★",distDC:155,distPVD:420,cost:77000,np:31000,aid:69,accept:49,sat:"1260–1440",merit:true,need:90,test:"optional",testNote:"Test-optional",fit:"realistic",moved:true,fitNote:"42% accept; 3.57/4.11 at median — DI Very Important, visit matters.",rationale:"A charming, historic campus in Carlisle, PA — only 155 miles from DC — with strong pre-health biology advising and generous merit aid for strong students. Dickinson's small, tightly-knit community and emphasis on sustainability aligns naturally with an interest in agriculture and animal science.",greek:"~16% overall",greekNote:"8% frats / 24% sororities — sorority life notably more active",diLevel:"very_important"},
+  {name:"Stony Brook University",url:"https://www.stonybrook.edu/undergraduate-admissions/",st:"NY",tp:"Public",instate:false,totalUG:18600,freshClass:3200,stf:19,eq:"IHSA club team",pv:"Animal Science / Pre-vet",campus:"★★★",distDC:310,distPVD:185,cost:35000,np:20000,aid:65,accept:49,sat:"1240–1430",merit:true,need:68,test:"optional",testNote:"Test-optional",fit:"realistic",moved:true,fitNote:"49% accept; 3.57 UW now in competitive zone test-optional.",rationale:"A strong research university with an Animal Science and pre-vet track, located 185 miles from Providence and within reasonable range of Long Island's active equestrian community. Offers excellent value as a SUNY school and merit aid for out-of-state students.",greek:"~2-3% overall",greekNote:"2% frats / 3% sororities — very low Greek participation",diLevel:"considered"},
+  {name:"Ithaca College",url:"https://www.ithaca.edu/admissions",st:"NY",tp:"Private",instate:false,totalUG:5300,freshClass:1500,stf:11,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★★★",distDC:360,distPVD:310,cost:66000,np:32000,aid:72,accept:68,sat:"1130–1340",merit:true,need:74,test:"optional",testNote:"Test-optional",fit:"realistic",moved:false,fitNote:"69% accept; 3.57 UW comfortably in range.",rationale:"Set on a dramatic hillside campus overlooking Cayuga Lake, Ithaca College offers strong pre-health biology preparation in a mid-size environment that balances social activity with quieter residential life. Located near Cornell's vet school, motivated students can sometimes access cross-registration or research opportunities.",greek:null,greekNote:"No Greek life — strong club and arts culture instead",diLevel:"considered"},
+  {name:"Stevenson University",url:"https://www.stevenson.edu/admissions/",st:"MD",tp:"Private",instate:false,totalUG:3100,freshClass:650,stf:13,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★",distDC:45,distPVD:390,cost:43000,np:22000,aid:74,accept:78,sat:"980–1170",merit:true,need:65,test:"optional",testNote:"Test-optional",fit:"safety",moved:false,fitNote:"78% accept; 3.57 UW above typical admit — reliable local safety.",rationale:"A Maryland private option just 45 miles from DC with generous merit aid and an IHSA club team, offering an accessible local fallback for a student who wants to stay close to home. Lower selectivity makes it a reliable safety on the list.",greek:"~5% overall",greekNote:"Small Greek presence; campus life is community-focused",diLevel:"not_considered"},
+  {name:"McDaniel College",url:"https://www.mcdaniel.edu/admissions",st:"MD",tp:"Private",instate:false,totalUG:1500,freshClass:370,stf:11,eq:"IHSA club team",pv:"Biology / Pre-health",campus:"★★★★",distDC:65,distPVD:385,cost:52000,np:25000,aid:76,accept:73,sat:"1040–1240",merit:true,need:78,test:"blind",testNote:"Test-BLIND — scores never considered",fit:"safety",moved:false,fitNote:"73% accept; test-blind, GPA is primary — 3.57 fits well.",rationale:"A distinctive Maryland liberal arts college that is fully test-blind — scores are never considered, making it a particularly welcoming option for students whose strengths lie outside standardized testing. Located just 65 miles from DC with solid pre-health advising and merit aid.",greek:"~10% overall",greekNote:"Small Greek community; liberal arts social culture",diLevel:"not_considered"},
+  {name:"Wilson College",url:"https://www.wilson.edu/admission",st:"PA",tp:"Private",instate:false,totalUG:1050,freshClass:230,stf:11,eq:"IHSA + Equestrian Studies degree",pv:"Animal Studies / Pre-vet",campus:"★★★★",distDC:165,distPVD:430,cost:40000,np:20000,aid:78,accept:52,sat:"990–1170",merit:true,need:80,test:"optional",testNote:"Test-optional",fit:"realistic",moved:false,fitNote:"52% accept; mission-driven profile — 3.57 UW solidly competitive.",rationale:"Perhaps the most overlooked gem on the list: Wilson offers both an IHSA equestrian program and a dedicated Equestrian Studies degree alongside an Animal Studies and pre-vet track, all on a beautiful 300-acre campus 165 miles from DC. Small class sizes and a strong agricultural identity make it an excellent fit for a horse-first student.",greek:"~5% overall",greekNote:"Minimal Greek life; small college community identity is primary",diLevel:"not_considered"},
+];
+
+const fitOrd={safety:0,realistic:1,sreach:2,reach:3};
+const fitLabel={safety:"Safety",realistic:"Realistic",sreach:"Slight reach",reach:"Reach"};
+const fitBadge={safety:"b-safety",realistic:"b-realistic",sreach:"b-sreach",reach:"b-reach"};
+const diLabel={"very_important":"Very Important","considered":"Considered","not_considered":"Not tracked"};
+const diBadge={"very_important":"b-di-vi","considered":"b-di-con","not_considered":"b-di-no"};
+
+let currentFilter='all', sortCol='fit', sortDir=1, currentTab='overview';
+const userNotes={}, userFit={};
+
+function moneyC(v){return v<45000?'mlo':v<65000?'mmd':'mhi';}
+function fmt(v){return'$'+Math.round(v/1000)+'k';}
+function fmtN(n){return n>=1000?(n/1000).toFixed(1)+'k':n.toString();}
+function distFmt(d){return`<span class="${d<=180?'dist-ok':'dist-far'}">${d}mi</span>`;}
+function testBadge(p){
+  if(p==='required')return'<span class="badge b-red">Required</span>';
+  if(p==='blind')return'<span class="badge b-teal">Test-blind</span>';
+  return'<span class="badge b-green">Optional</span>';
+}
+function stfC(r){return r<=12?'stf-good':r<=17?'stf-mid':'stf-large';}
+function stfLbl(r){return r?`<span class="${stfC(r)}" style="font-weight:500">${r}:1</span>`:'<span style="color:var(--text-muted)">N/R</span>';}
+function sizeCell(s){return`<div class="sz-line">${fmtN(s.totalUG)}<span style="font-size:10px;color:var(--text-muted)"> UG</span></div><div class="sz-sub">~${fmtN(s.freshClass)} freshmen</div><div class="sz-sub">S:F ${stfLbl(s.stf)}</div>`;}
+function greekFmt(g,note){
+  if(!g)return`<span class="badge b-gray">None</span><div style="font-size:9px;color:var(--text-muted);margin-top:2px">${note}</div>`;
+  return`<span class="badge b-purple">${g}</span><div style="font-size:9px;color:var(--text-muted);margin-top:2px">${note}</div>`;
+}
+
+function switchTab(t,el){currentTab=t;document.querySelectorAll('.t-tab').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderHeaders();renderTable();}
+function setFilter(f,el){currentFilter=f;document.querySelectorAll('.t-filter').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderTable();}
+function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}renderTable();}
+
+function getFiltered(){
+  const q=(document.getElementById('searchBox')||{value:''}).value.toLowerCase();
+  return schools.filter(s=>{
+    if(q&&!s.name.toLowerCase().includes(q)&&!s.st.toLowerCase().includes(q))return false;
+    const f=userFit[s.name]||s.fit;
+    if(currentFilter==='safety')return f==='safety';
+    if(currentFilter==='realistic')return f==='realistic';
+    if(currentFilter==='sreach')return f==='sreach';
+    if(currentFilter==='reach')return f==='reach';
+    if(currentFilter==='prevetq')return s.pv.toLowerCase().includes('pre-vet')||s.pv.toLowerCase().includes('vet');
+    if(currentFilter==='budget')return s.cost<45000;
+    if(currentFilter==='dc3hr')return s.distDC<=180;
+    if(currentFilter==='pvd3hr')return s.distPVD<=180;
+    if(currentFilter==='smallclass')return s.stf&&s.stf<=12;
+    if(currentFilter==='nogreek')return s.greek===null;
+    if(currentFilter==='small')return s.totalUG<5000;
+    return true;
+  });
+}
+
+function renderHeaders(){
+  const h=document.getElementById('tHead');
+  const dc=`<th style="min-width:56px" onclick="sortBy('distDC')">↔ DC</th><th style="min-width:60px" onclick="sortBy('distPVD')">↔ PVD</th>`;
+  const szH=`<th style="min-width:118px" onclick="sortBy('totalUG')">Size / Freshmen / S:F</th>`;
+  if(currentTab==='overview'){
+    h.innerHTML=`<tr><th style="min-width:155px" onclick="sortBy('name')">School</th><th style="min-width:90px" onclick="sortBy('fit')">Fit</th><th style="min-width:70px" onclick="sortBy('cost')">MD Cost</th><th style="min-width:68px" onclick="sortBy('np')">Net Price</th><th style="min-width:90px">Equestrian</th><th style="min-width:78px">Pre-vet</th><th style="min-width:54px">Campus</th>${dc}<th style="min-width:74px">Testing</th><th style="min-width:92px" onclick="sortBy('di')">Demo. Interest</th><th style="min-width:195px">Why it made the list</th></tr>`;
+  } else if(currentTab==='financial'){
+    h.innerHTML=`<tr><th style="min-width:155px" onclick="sortBy('name')">School</th><th style="min-width:84px" onclick="sortBy('fit')">Fit</th><th style="min-width:72px" onclick="sortBy('cost')">MD Sticker</th><th style="min-width:68px" onclick="sortBy('np')">Net Price</th><th style="min-width:60px">Savings</th><th style="min-width:54px" onclick="sortBy('aid')">Aid %</th><th style="min-width:52px">Merit?</th><th style="min-width:58px" onclick="sortBy('need')">Need met</th><th style="min-width:54px" onclick="sortBy('accept')">Accept</th>${dc}<th style="min-width:150px">Notes</th></tr>`;
+  } else if(currentTab==='academic'){
+    h.innerHTML=`<tr><th style="min-width:155px" onclick="sortBy('name')">School</th><th style="min-width:90px" onclick="sortBy('fit')">Fit</th><th style="min-width:54px" onclick="sortBy('accept')">Accept</th><th style="min-width:90px">SAT range</th>${szH}<th style="min-width:42px">Type</th><th style="min-width:90px">Equestrian</th><th style="min-width:78px">Pre-vet</th><th style="min-width:54px">Campus</th>${dc}<th style="min-width:150px">Notes</th></tr>`;
+  } else if(currentTab==='testing'){
+    h.innerHTML=`<tr><th style="min-width:155px" onclick="sortBy('name')">School</th><th style="min-width:90px" onclick="sortBy('fit')">Fit</th><th style="min-width:84px" onclick="sortBy('test')">Test policy</th><th style="min-width:185px">Details</th><th style="min-width:90px">SAT range</th><th style="min-width:54px" onclick="sortBy('accept')">Accept</th><th style="min-width:92px" onclick="sortBy('di')">Demo. Interest</th>${dc}<th style="min-width:150px">Fit rationale</th></tr>`;
+  } else {
+    h.innerHTML=`<tr><th style="min-width:155px" onclick="sortBy('name')">School</th><th style="min-width:90px" onclick="sortBy('fit')">Fit</th><th style="min-width:54px">Campus</th><th style="min-width:145px" onclick="sortBy('greek')">Greek life</th><th style="min-width:92px" onclick="sortBy('di')">Demo. Interest</th><th style="min-width:90px">Equestrian</th>${szH}<th style="min-width:42px">Type</th>${dc}<th style="min-width:150px">Notes</th></tr>`;
+  }
+}
+
+function renderTable(){
+  let data=getFiltered();
+  data.sort((a,b)=>{
+    if(sortCol==='name')return sortDir*a.name.localeCompare(b.name);
+    if(sortCol==='cost')return sortDir*(a.cost-b.cost);
+    if(sortCol==='np')return sortDir*(a.np-b.np);
+    if(sortCol==='aid')return sortDir*(b.aid-a.aid);
+    if(sortCol==='need')return sortDir*(b.need-a.need);
+    if(sortCol==='accept')return sortDir*(a.accept-b.accept);
+    if(sortCol==='distDC')return sortDir*(a.distDC-b.distDC);
+    if(sortCol==='distPVD')return sortDir*(a.distPVD-b.distPVD);
+    if(sortCol==='totalUG')return sortDir*(a.totalUG-b.totalUG);
+    if(sortCol==='fit')return sortDir*(fitOrd[userFit[a.name]||a.fit]-fitOrd[userFit[b.name]||b.fit]);
+    if(sortCol==='test'){const to={required:0,blind:1,optional:2};return sortDir*((to[a.test]||2)-(to[b.test]||2));}
+    if(sortCol==='di'){const d={'very_important':0,'considered':1,'not_considered':2};return sortDir*((d[a.diLevel]||1)-(d[b.diLevel]||1));}
+    if(sortCol==='greek')return sortDir*((b.greek?1:0)-(a.greek?1:0));
+    return 0;
+  });
+
+  const tbody=document.getElementById('tBody');
+  tbody.innerHTML='';
+  data.forEach(s=>{
+    const cf=userFit[s.name]||s.fit;
+    const oc=userNotes[s.name]!==undefined?userNotes[s.name]:s.rationale;
+    const nc=userNotes[s.name+'_o']||'';
+    const ab=s.accept<25?'b-red':s.accept<55?'b-amber':'b-green';
+    const eb=s.eq.includes('IHSA +')||s.eq.includes('degree')||s.eq.includes('D3')?'b-green':'b-blue';
+    const pb=s.pv.toLowerCase().includes('pre-vet')||s.pv.toLowerCase().includes('vet')?'b-green':'b-blue';
+    const mt=s.moved?'<span class="badge b-moved" style="font-size:9px;margin-left:4px;vertical-align:middle">↑</span>':'';
+
+    const nc1=`<td style="min-width:155px;vertical-align:top"><div style="font-weight:500;font-size:11px;line-height:1.4"><a href="${s.url}" target="_blank" class="sl">${s.name}</a>${s.instate?' <span class="badge b-instate" style="font-size:9px">In-state</span>':''}${mt}</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px">${s.st} · ${s.tp}</div></td>`;
+    const fc=`<td style="min-width:90px;vertical-align:top;padding-top:9px"><span class="badge ${fitBadge[cf]}">${fitLabel[cf]}</span></td>`;
+    const fs=`<td style="min-width:90px;vertical-align:top"><select class="fit-sel" data-school="${s.name}" onchange="updFit(this)">${Object.entries(fitLabel).map(([k,v])=>`<option value="${k}" ${k===cf?'selected':''}>${v}</option>`).join('')}</select></td>`;
+    const dc=`<td style="min-width:56px;vertical-align:top">${distFmt(s.distDC)}</td><td style="min-width:60px;vertical-align:top">${distFmt(s.distPVD)}</td>`;
+    const dic=`<td style="min-width:92px;vertical-align:top"><span class="badge ${diBadge[s.diLevel]}">${diLabel[s.diLevel]}</span></td>`;
+    const notc=`<td style="min-width:150px;vertical-align:top"><textarea class="notes-ta" data-school="${s.name}_o" rows="2" placeholder="Notes…" onchange="saveNote(this)" oninput="autoSz(this)">${nc}</textarea></td>`;
+    const szc=`<td style="min-width:118px;vertical-align:top">${sizeCell(s)}</td>`;
+
+    let cells='';
+    if(currentTab==='overview'){
+      const rows=Math.max(3,Math.ceil(s.rationale.length/36));
+      cells=`${nc1}${fc}<td style="min-width:70px;vertical-align:top"><span class="money ${moneyC(s.cost)}">${fmt(s.cost)}</span>${s.instate?'<div style="font-size:9px;color:#1a3070;margin-top:2px">in-state</div>':''}</td><td style="min-width:68px;vertical-align:top"><span class="money mlo">${fmt(s.np)}</span></td><td style="min-width:90px;vertical-align:top"><span class="badge ${eb}" style="font-size:10px;white-space:normal;line-height:1.4">${s.eq}</span></td><td style="min-width:78px;vertical-align:top"><span class="badge ${pb}" style="font-size:10px;white-space:normal;line-height:1.4">${s.pv}</span></td><td style="min-width:54px;vertical-align:top;letter-spacing:-2px">${s.campus}</td>${dc}<td style="min-width:74px;vertical-align:top">${testBadge(s.test)}</td>${dic}<td style="min-width:195px;vertical-align:top"><textarea class="notes-ta" data-school="${s.name}" rows="${rows}" onchange="saveMain(this)" oninput="autoSz(this)">${oc}</textarea></td>`;
+    } else if(currentTab==='financial'){
+      const nb=s.need>=95?'b-green':s.need>=75?'b-blue':'b-gray';
+      cells=`${nc1}${fc}<td style="min-width:72px;vertical-align:top"><span class="money ${moneyC(s.cost)}">${fmt(s.cost)}</span></td><td style="min-width:68px;vertical-align:top"><span class="money mlo">${fmt(s.np)}</span></td><td style="min-width:60px;vertical-align:top"><span class="money mlo">${fmt(s.cost-s.np)}</span></td><td style="min-width:54px;vertical-align:top"><span class="money">${s.aid}%</span><div class="bar-wrap"><div class="bar-fill" style="width:${s.aid}%"></div></div></td><td style="min-width:52px;vertical-align:top"><span class="badge ${s.merit?'b-green':'b-gray'}">${s.merit?'Yes':'No'}</span></td><td style="min-width:58px;vertical-align:top"><span class="badge ${nb}">${s.need}%</span></td><td style="min-width:54px;vertical-align:top"><span class="badge ${ab}">${s.accept}%</span></td>${dc}${notc}`;
+    } else if(currentTab==='academic'){
+      cells=`${nc1}${fc}<td style="min-width:54px;vertical-align:top"><span class="badge ${ab}">${s.accept}%</span></td><td style="min-width:90px;vertical-align:top" class="money">${s.sat}</td>${szc}<td style="min-width:42px;vertical-align:top"><span class="badge b-gray">${s.tp[0]}</span></td><td style="min-width:90px;vertical-align:top"><span class="badge ${eb}" style="font-size:10px;white-space:normal;line-height:1.4">${s.eq}</span></td><td style="min-width:78px;vertical-align:top"><span class="badge ${pb}" style="font-size:10px;white-space:normal;line-height:1.4">${s.pv}</span></td><td style="min-width:54px;vertical-align:top;letter-spacing:-2px">${s.campus}</td>${dc}${notc}`;
+    } else if(currentTab==='testing'){
+      cells=`${nc1}${fs}<td style="min-width:84px;vertical-align:top">${testBadge(s.test)}</td><td style="min-width:185px;vertical-align:top;font-size:10px;color:var(--text-muted);line-height:1.5">${s.testNote}</td><td style="min-width:90px;vertical-align:top" class="money">${s.sat}</td><td style="min-width:54px;vertical-align:top"><span class="badge ${ab}">${s.accept}%</span></td>${dic}${dc}<td style="min-width:150px;vertical-align:top;font-size:10px;color:var(--text-muted);line-height:1.5">${s.fitNote}</td>`;
+    } else {
+      cells=`${nc1}${fc}<td style="min-width:54px;vertical-align:top;letter-spacing:-2px">${s.campus}</td><td style="min-width:145px;vertical-align:top">${greekFmt(s.greek,s.greekNote)}</td>${dic}<td style="min-width:90px;vertical-align:top"><span class="badge ${eb}" style="font-size:10px;white-space:normal;line-height:1.4">${s.eq}</span></td>${szc}<td style="min-width:42px;vertical-align:top"><span class="badge b-gray">${s.tp[0]}</span></td>${dc}${notc}`;
+    }
+    const row=document.createElement('tr');
+    row.innerHTML=cells;
+    tbody.appendChild(row);
+  });
+  renderStats(data);
+}
+
+function updFit(sel){userFit[sel.dataset.school]=sel.value;renderTable();}
+function saveMain(ta){userNotes[ta.dataset.school]=ta.value;}
+function saveNote(ta){userNotes[ta.dataset.school]=ta.value;}
+function autoSz(ta){ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';}
+
+function renderStats(data){
+  const c={safety:0,realistic:0,sreach:0,reach:0};
+  data.forEach(s=>{const f=userFit[s.name]||s.fit;c[f]=(c[f]||0)+1;});
+  const sc=data.filter(s=>s.stf&&s.stf<=12).length;
+  const stfD=data.filter(s=>s.stf);
+  const avg=stfD.length?Math.round(stfD.reduce((a,s)=>a+s.stf,0)/stfD.length):0;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="t-stat"><div class="sl">Showing</div><div class="sv">${data.length}</div></div>
+    <div class="t-stat"><div class="sl">Safety</div><div class="sv" style="color:var(--safety)">${c.safety}</div></div>
+    <div class="t-stat"><div class="sl">Realistic</div><div class="sv" style="color:var(--realistic)">${c.realistic}</div></div>
+    <div class="t-stat"><div class="sl">Slight reach</div><div class="sv" style="color:var(--sreach)">${c.sreach}</div></div>
+    <div class="t-stat"><div class="sl">Reach</div><div class="sv" style="color:var(--reach)">${c.reach}</div></div>
+    <div class="t-stat"><div class="sl">Avg S:F</div><div class="sv">${avg}:1</div></div>
+    <div class="t-stat"><div class="sl">S:F ≤12:1</div><div class="sv">${sc}</div></div>
+  `;
+}
+
+// Init tracker
+renderHeaders();
+renderTable();
+</script>
+</body>
+</html>
